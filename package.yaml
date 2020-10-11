@@ -1,0 +1,67 @@
+name:                santa-backend
+version:             0.1.0.0
+github:              "chfin/santa-backend"
+license:             BSD3
+author:              "Christoph Finkensiep"
+maintainer:          "chfin@chfin.de"
+copyright:           "Christoph Finkensiep"
+
+extra-source-files:
+- README.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/chfin/santa-backend#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- aeson
+- servant-server
+- servant-js
+- wai
+- warp
+- text
+- sqlite-simple
+
+library:
+  source-dirs: src
+
+executables:
+  serve-backend:
+    main:                BackendServer
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - base
+    - santa-backend
+  generate-js:
+    main:                WriteAPI
+    # other-modules:       []
+    source-dirs:         app/
+    dependencies:
+    - base
+    - santa-backend
+
+tests:
+  santa-backend-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - base
+    - santa-backend
+    - hspec
+    - hspec-wai
+    - hspec-wai-json
+    - aeson
