@@ -16,7 +16,11 @@ import           Network.Wai.Handler.Warp       ( run )
 import           Servant
 import           GHC.Generics                   ( Generic )
 import           Servant.JS                     ( jsForAPI
-                                                , vanillaJS
+                                                , vanillaJSWith
+                                                , defCommonGeneratorOptions
+                                                , CommonGeneratorOptions
+                                                  ( urlPrefix
+                                                  )
                                                 )
 import qualified Data.Text                     as T
 import qualified Data.Text.IO                  as T
@@ -108,8 +112,10 @@ startApp = do
   run 8080 app
 
 -- generate JS
-generateJS :: T.Text
-generateJS = jsForAPI wishesApi vanillaJS
+generateJS :: T.Text -> T.Text
+generateJS pfx = jsForAPI wishesApi $ vanillaJSWith $ defCommonGeneratorOptions
+  { urlPrefix = pfx
+  }
 
-writeJS :: FilePath -> IO ()
-writeJS fn = T.writeFile fn generateJS
+writeJS :: FilePath -> T.Text -> IO ()
+writeJS fn pfx = T.writeFile fn $ generateJS pfx
