@@ -109,7 +109,7 @@ app = serve api server
 startApp :: IO ()
 startApp = do
   initDB
-  run 8080 app
+  run 2412 app
 
 -- generate JS
 generateJS :: T.Text -> T.Text
