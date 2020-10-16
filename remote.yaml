@@ -48,7 +48,7 @@ extra-deps:
   - direct-sqlite-2.3.26@sha256:04e835402f1508abca383182023e4e2b9b86297b8533afbd4e57d1a5652e0c23,3718
 
 ghc-options:
-  "*": "\"+RTS -M768m -RTS\""
+  "$everything": "\"+RTS -M768m -RTS\""
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
