@@ -1,7 +1,7 @@
 
-var getWishes = function(onSuccess, onError) {
+var getByGroupWishes = function(group, onSuccess, onError) {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', '/wishes', true);
+  xhr.open('GET', '/santa/' + encodeURIComponent(group) + '/wishes', true);
   xhr.setRequestHeader('Accept', 'application/json');
   xhr.onreadystatechange = function () {
     var res = null;
@@ -20,9 +20,9 @@ var getWishes = function(onSuccess, onError) {
   xhr.send(null);
 };
 
-var getWishByWishid = function(wishid, onSuccess, onError) {
+var getByGroupWishByWishid = function(group, wishid, onSuccess, onError) {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', '/wish/' + encodeURIComponent(wishid) + '', true);
+  xhr.open('GET', '/santa/' + encodeURIComponent(group) + '/wish/' + encodeURIComponent(wishid) + '', true);
   xhr.setRequestHeader('Accept', 'application/json');
   xhr.onreadystatechange = function () {
     var res = null;
@@ -41,9 +41,9 @@ var getWishByWishid = function(wishid, onSuccess, onError) {
   xhr.send(null);
 };
 
-var deleteWishByWishid = function(wishid, onSuccess, onError) {
+var deleteByGroupWishByWishid = function(group, wishid, onSuccess, onError) {
   var xhr = new XMLHttpRequest();
-  xhr.open('DELETE', '/wish/' + encodeURIComponent(wishid) + '', true);
+  xhr.open('DELETE', '/santa/' + encodeURIComponent(group) + '/wish/' + encodeURIComponent(wishid) + '', true);
   xhr.setRequestHeader('Accept', 'application/json');
   xhr.onreadystatechange = function () {
     var res = null;
@@ -62,9 +62,9 @@ var deleteWishByWishid = function(wishid, onSuccess, onError) {
   xhr.send(null);
 };
 
-var postAddWish = function(content, onSuccess, onError) {
+var postByGroupAddWish = function(group, content, onSuccess, onError) {
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', '/addWish' + '?content=' + encodeURIComponent(content), true);
+  xhr.open('POST', '/santa/' + encodeURIComponent(group) + '/addWish' + '?content=' + encodeURIComponent(content), true);
   xhr.setRequestHeader('Accept', 'application/json');
   xhr.onreadystatechange = function () {
     var res = null;

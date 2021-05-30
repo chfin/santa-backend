@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DataKinds       #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeOperators   #-}
 module Wish
   ( startApp
@@ -50,20 +49,21 @@ type GetWish = "wish" :> Capture "wishid" Int :> Get '[JSON] (Maybe Wish)
 type DeleteWish = "wish" :> Capture "wishid" Int :> DeleteNoContent
 type AddWish = "addWish" :> QueryParam "content" String :> PostNoContent
 type WishesAPI = GetWishes :<|> GetWish :<|> DeleteWish :<|> AddWish
+type WishesGroupAPI = Capture "group" String :> WishesAPI
 
 type Static = "static" :> Raw
-type API = WishesAPI :<|> Static
+type API = WishesGroupAPI :<|> Static
 
 -- data
 initDB :: IO ()
 initDB = withConnection dbfile $ \conn -> execute_
   conn
-  "CREATE TABLE IF NOT EXISTS wishes (id INTEGER PRIMARY KEY, content text not null);"
+  "CREATE TABLE IF NOT EXISTS wishes (id INTEGER PRIMARY KEY, group text not null, content text not null);"
 
 -- API implementation
-getWishes :: IO [Wish]
-getWishes =
-  withConnection dbfile $ \conn -> query_ conn "SELECT * FROM wishes;"
+getWishes :: String -> IO [Wish]
+getWishes group = withConnection dbfile $ \conn ->
+  query conn "SELECT * FROM wishes WHERE group IS (?);" (Only group)
 
 getWish :: Int -> IO (Maybe Wish)
 getWish id = withConnection dbfile $ \conn ->
@@ -75,29 +75,31 @@ deleteWish id = do
     $ \conn -> execute conn "DELETE FROM wishes WHERE ID IS (?)" (Only id)
   pure NoContent
 
-addWish :: Maybe String -> IO NoContent
-addWish (Just content) = do
-  withConnection dbfile $ \conn ->
-    execute conn "INSERT INTO wishes (content) VALUES (?);" (Only content)
+addWish :: String -> Maybe String -> IO NoContent
+addWish group (Just content) = do
+  withConnection dbfile $ \conn -> executeNamed
+    conn
+    "INSERT INTO wishes (group,content) VALUES (:group,:content);"
+    [":group" := group, ":content" := content]
   pure NoContent
-addWish Nothing = pure NoContent
+addWish _ Nothing = pure NoContent
 
 -- server
-wishesServer :: Server WishesAPI
-wishesServer =
-  liftIO getWishes
+wishesServer :: Server WishesGroupAPI
+wishesServer group =
+  liftIO (getWishes group)
     :<|> liftIO
     .    getWish
     :<|> liftIO
     .    deleteWish
     :<|> liftIO
-    .    addWish
+    .    addWish group
 
 server :: Server API
 server = wishesServer :<|> serveDirectoryWebApp "static"
 
 -- running stuff
-wishesApi :: Proxy WishesAPI
+wishesApi :: Proxy WishesGroupAPI
 wishesApi = Proxy
 
 api :: Proxy API
