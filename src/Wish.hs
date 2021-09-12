@@ -12,6 +12,7 @@ where
 
 import           Data.Aeson
 import           Network.Wai.Handler.Warp       ( run )
+import           Network.Wai.Middleware.Cors    ( simpleCors )
 import           Servant
 import           GHC.Generics                   ( Generic )
 import           Servant.JS                     ( jsForAPI
@@ -58,16 +59,16 @@ type API = WishesGroupAPI :<|> Static
 initDB :: IO ()
 initDB = withConnection dbfile $ \conn -> execute_
   conn
-  "CREATE TABLE IF NOT EXISTS wishes (id INTEGER PRIMARY KEY, group text not null, content text not null);"
+  "CREATE TABLE IF NOT EXISTS wishes (id INTEGER PRIMARY KEY, wgroup text not null, content text not null);"
 
 -- API implementation
 getWishes :: String -> IO [Wish]
 getWishes group = withConnection dbfile $ \conn ->
-  query conn "SELECT * FROM wishes WHERE group IS (?);" (Only group)
+  query conn "SELECT id,content FROM wishes WHERE wgroup IS (?);" (Only group)
 
 getWish :: Int -> IO (Maybe Wish)
-getWish id = withConnection dbfile $ \conn ->
-  listToMaybe <$> query conn "SELECT * FROM wishes WHERE ID IS (?);" (Only id)
+getWish id = withConnection dbfile $ \conn -> listToMaybe
+  <$> query conn "SELECT id,content FROM wishes WHERE ID IS (?);" (Only id)
 
 deleteWish :: Int -> IO NoContent
 deleteWish id = do
@@ -79,7 +80,7 @@ addWish :: String -> Maybe String -> IO NoContent
 addWish group (Just content) = do
   withConnection dbfile $ \conn -> executeNamed
     conn
-    "INSERT INTO wishes (group,content) VALUES (:group,:content);"
+    "INSERT INTO wishes (wgroup,content) VALUES (:group,:content);"
     [":group" := group, ":content" := content]
   pure NoContent
 addWish _ Nothing = pure NoContent
@@ -106,7 +107,7 @@ api :: Proxy API
 api = Proxy
 
 app :: Application
-app = serve api server
+app = simpleCors $ serve api server
 
 startApp :: IO ()
 startApp = do

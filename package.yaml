@@ -24,6 +24,7 @@ dependencies:
 - servant-server
 - servant-js
 - wai
+- wai-cors
 - warp
 - text
 - sqlite-simple
