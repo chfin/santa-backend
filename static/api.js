@@ -1,7 +1,7 @@
 
 var getByGroupWishes = function(group, onSuccess, onError) {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'http://localhost:2412/' + encodeURIComponent(group) + '/wishes', true);
+  xhr.open('GET', '/santa/' + encodeURIComponent(group) + '/wishes', true);
   xhr.setRequestHeader('Accept', 'application/json');
   xhr.onreadystatechange = function () {
     var res = null;
@@ -22,7 +22,7 @@ var getByGroupWishes = function(group, onSuccess, onError) {
 
 var getByGroupWishByWishid = function(group, wishid, onSuccess, onError) {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'http://localhost:2412/' + encodeURIComponent(group) + '/wish/' + encodeURIComponent(wishid) + '', true);
+  xhr.open('GET', '/santa/' + encodeURIComponent(group) + '/wish/' + encodeURIComponent(wishid) + '', true);
   xhr.setRequestHeader('Accept', 'application/json');
   xhr.onreadystatechange = function () {
     var res = null;
@@ -43,7 +43,7 @@ var getByGroupWishByWishid = function(group, wishid, onSuccess, onError) {
 
 var deleteByGroupWishByWishid = function(group, wishid, onSuccess, onError) {
   var xhr = new XMLHttpRequest();
-  xhr.open('DELETE', 'http://localhost:2412/' + encodeURIComponent(group) + '/wish/' + encodeURIComponent(wishid) + '', true);
+  xhr.open('DELETE', '/santa/' + encodeURIComponent(group) + '/wish/' + encodeURIComponent(wishid) + '', true);
   xhr.setRequestHeader('Accept', 'application/json');
   xhr.onreadystatechange = function () {
     var res = null;
@@ -64,7 +64,7 @@ var deleteByGroupWishByWishid = function(group, wishid, onSuccess, onError) {
 
 var postByGroupAddWish = function(group, content, onSuccess, onError) {
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', 'http://localhost:2412/' + encodeURIComponent(group) + '/addWish' + '?content=' + encodeURIComponent(content), true);
+  xhr.open('POST', '/santa/' + encodeURIComponent(group) + '/addWish' + '?content=' + encodeURIComponent(content), true);
   xhr.setRequestHeader('Accept', 'application/json');
   xhr.onreadystatechange = function () {
     var res = null;

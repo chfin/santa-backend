@@ -17,7 +17,7 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-resolver: lts-16.17
+resolver: lts-21.13
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -41,14 +41,15 @@ packages:
 #
 # extra-deps: []
 extra-deps:
-  - servant-0.17
-  - servant-server-0.17
-  - servant-foreign-0.15.1
-  - sqlite-simple-0.4.18.0@sha256:3ceea56375c0a3590c814e411a4eb86943f8d31b93b110ca159c90689b6b39e5,3002
-  - direct-sqlite-2.3.26@sha256:04e835402f1508abca383182023e4e2b9b86297b8533afbd4e57d1a5652e0c23,3718
+- servant-js-0.9.4.2@sha256:d66eb9f0800e283eba86cc9503b1095a05e4ad49be782269f71e0b9103a8d02b,3528
+  # - servant-0.17
+  # - servant-server-0.17
+  # - servant-foreign-0.15.1
+  # - sqlite-simple-0.4.18.0@sha256:3ceea56375c0a3590c814e411a4eb86943f8d31b93b110ca159c90689b6b39e5,3002
+  # - direct-sqlite-2.3.26@sha256:04e835402f1508abca383182023e4e2b9b86297b8533afbd4e57d1a5652e0c23,3718
 
-ghc-options:
-  "$everything": -haddock
+# ghc-options:
+#   "$everything": -haddock
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
